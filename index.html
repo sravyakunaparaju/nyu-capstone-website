@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Optimizing Care Access — NYU Wagner Capstone × Anytime Telecare</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --purple: #5B2D8E;
+    --purple-light: #7B4FB0;
+    --purple-bg: #F4EFFA;
+    --green: #6EC88C;
+    --green-light: #A8E6BF;
+    --green-bg: #EDF9F1;
+    --dark: #1A1A2E;
+    --text: #2D2D3F;
+    --text-light: #6B6B80;
+    --white: #FFFFFF;
+    --off-white: #FAFAFE;
+    --border: #E8E4F0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 80px;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text);
+    background: var(--white);
+    overflow-x: hidden;
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    transition: box-shadow 0.3s;
+  }
+  nav.scrolled { box-shadow: 0 2px 24px rgba(91,45,142,0.08); }
+
+  .nav-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 32px;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .nav-logos {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .nav-logos img { height: 36px; }
+  .nav-logos .divider {
+    width: 1px;
+    height: 28px;
+    background: var(--border);
+  }
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    list-style: none;
+  }
+  .nav-links a {
+    text-decoration: none;
+    color: var(--text);
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    transition: color 0.25s;
+    position: relative;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--purple);
+    transition: width 0.3s;
+  }
+  .nav-links a:hover { color: var(--purple); }
+  .nav-links a:hover::after { width: 100%; }
+
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 8px;
+  }
+  .hamburger span {
+    width: 24px;
+    height: 2px;
+    background: var(--dark);
+    transition: 0.3s;
+  }
+
+  /* ─── HERO ─── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(165deg, var(--white) 0%, var(--purple-bg) 50%, var(--green-bg) 100%);
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -200px;
+    right: -200px;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(110,200,140,0.12) 0%, transparent 70%);
+    animation: float 8s ease-in-out infinite;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -150px;
+    left: -150px;
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(91,45,142,0.08) 0%, transparent 70%);
+    animation: float 10s ease-in-out infinite reverse;
+  }
+  @keyframes float {
+    0%,100% { transform: translate(0,0); }
+    50% { transform: translate(30px,-30px); }
+  }
+
+  .hero-cross {
+    position: absolute;
+    right: 8%;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0.06;
+    pointer-events: none;
+  }
+  .hero-cross svg { width: 400px; height: 400px; }
+
+  .hero-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 120px 32px 80px;
+    position: relative;
+    z-index: 2;
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 6px 16px 6px 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--purple);
+    margin-bottom: 32px;
+    animation: fadeUp 0.6s ease-out both;
+  }
+  .hero-badge .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--green);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%,100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .hero h1 {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: clamp(36px, 5vw, 60px);
+    font-weight: 800;
+    line-height: 1.1;
+    color: var(--dark);
+    margin-bottom: 20px;
+    max-width: 780px;
+    animation: fadeUp 0.6s 0.1s ease-out both;
+  }
+  .hero h1 span { color: var(--purple); }
+
+  .hero-subtitle {
+    font-size: 18px;
+    line-height: 1.7;
+    color: var(--text-light);
+    max-width: 600px;
+    margin-bottom: 28px;
+    animation: fadeUp 0.6s 0.2s ease-out both;
+  }
+
+  .hero-statement {
+    background: var(--white);
+    border-left: 4px solid var(--green);
+    border-radius: 0 12px 12px 0;
+    padding: 20px 24px;
+    max-width: 620px;
+    margin-bottom: 20px;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.6;
+    color: var(--dark);
+    box-shadow: 0 2px 16px rgba(91,45,142,0.06);
+    animation: fadeUp 0.6s 0.25s ease-out both;
+  }
+  .hero-statement strong { color: var(--purple); }
+
+  .hero-authors {
+    font-size: 15px;
+    color: var(--text-light);
+    margin-bottom: 36px;
+    animation: fadeUp 0.6s 0.3s ease-out both;
+  }
+  .hero-authors strong { color: var(--text); font-weight: 600; }
+
+  .hero-cta {
+    display: flex;
+    gap: 16px;
+    animation: fadeUp 0.6s 0.35s ease-out both;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 28px;
+    border-radius: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s;
+    cursor: pointer;
+    border: none;
+  }
+  .btn-primary {
+    background: var(--purple);
+    color: var(--white);
+    box-shadow: 0 4px 16px rgba(91,45,142,0.25);
+  }
+  .btn-primary:hover {
+    background: var(--purple-light);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(91,45,142,0.3);
+  }
+  .btn-outline {
+    background: transparent;
+    color: var(--purple);
+    border: 1.5px solid var(--purple);
+  }
+  .btn-outline:hover {
+    background: var(--purple-bg);
+    transform: translateY(-2px);
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ─── SECTIONS ─── */
+  section { padding: 100px 32px; }
+  .section-inner { max-width: 1200px; margin: 0 auto; }
+  .section-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--purple);
+    margin-bottom: 16px;
+  }
+  .section-label::before {
+    content: '';
+    width: 24px;
+    height: 2px;
+    background: var(--green);
+  }
+  .section-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: clamp(28px, 3.5vw, 42px);
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 20px;
+    line-height: 1.2;
+  }
+  .section-desc {
+    font-size: 17px;
+    line-height: 1.8;
+    color: var(--text-light);
+    max-width: 720px;
+  }
+
+  /* ─── ABOUT ─── */
+  #about { background: var(--off-white); }
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: start;
+    margin-top: 48px;
+  }
+  .about-card {
+    background: var(--white);
+    border-radius: 20px;
+    padding: 40px;
+    border: 1px solid var(--border);
+    box-shadow: 0 4px 24px rgba(91,45,142,0.04);
+  }
+  .about-card p {
+    font-size: 15px;
+    line-height: 1.8;
+    color: var(--text-light);
+  }
+  .about-card h3 {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 12px;
+  }
+  .about-card .icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    font-size: 22px;
+  }
+  .icon-purple { background: var(--purple-bg); }
+  .icon-green { background: var(--green-bg); }
+  .about-right {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  /* ─── PROJECT ─── */
+  #project { background: var(--white); }
+  .project-content {
+    margin-top: 48px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .proj-card {
+    border-radius: 16px;
+    padding: 36px 28px;
+    border: 1px solid var(--border);
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .proj-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--purple), var(--green));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s;
+  }
+  .proj-card:hover::before { transform: scaleX(1); }
+  .proj-card:hover {
+    box-shadow: 0 8px 32px rgba(91,45,142,0.08);
+    transform: translateY(-4px);
+  }
+  .proj-card .step-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    font-size: 18px;
+  }
+  .proj-card h3 {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 10px;
+  }
+  .proj-card p {
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--text-light);
+  }
+
+  /* ─── FINDINGS ─── */
+  #findings { background: var(--off-white); }
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin: 48px 0 24px;
+  }
+  .stats-row-2 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-bottom: 48px;
+  }
+  .stat-card {
+    text-align: center;
+    background: var(--white);
+    border-radius: 20px;
+    padding: 40px 24px;
+    border: 1px solid var(--border);
+    transition: all 0.3s;
+  }
+  .stat-card:hover {
+    box-shadow: 0 8px 32px rgba(91,45,142,0.08);
+    transform: translateY(-4px);
+  }
+  .stat-number {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 52px;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--purple), var(--green));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .stat-suffix {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+  }
+  .stat-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-light);
+    line-height: 1.5;
+  }
+
+  .qual-callout {
+    background: linear-gradient(135deg, var(--purple), var(--purple-light));
+    border-radius: 20px;
+    padding: 40px 48px;
+    color: var(--white);
+    margin-bottom: 48px;
+  }
+  .qual-callout h3 {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    opacity: 0.95;
+  }
+  .qual-callout p {
+    font-size: 16px;
+    line-height: 1.7;
+    opacity: 0.9;
+  }
+
+  .tableau-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  .tableau-embed-wrapper {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 32px;
+    box-shadow: 0 4px 24px rgba(91,45,142,0.04);
+  }
+  .tableau-embed-wrapper h3 {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 8px;
+  }
+  .tableau-embed-wrapper .caption {
+    font-size: 14px;
+    color: var(--text-light);
+    margin-bottom: 24px;
+    line-height: 1.6;
+  }
+  .tableau-frame {
+    width: 100%;
+    min-height: 500px;
+    border: none;
+    border-radius: 12px;
+    background: var(--purple-bg);
+  }
+
+  /* ─── RECOMMENDATIONS ─── */
+  #recommendations { background: var(--white); }
+  .rec-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 48px;
+  }
+  .rec-card {
+    background: var(--off-white);
+    border-radius: 16px;
+    padding: 32px;
+    border: 1px solid var(--border);
+    display: flex;
+    gap: 20px;
+    transition: all 0.3s;
+  }
+  .rec-card:hover {
+    box-shadow: 0 8px 24px rgba(91,45,142,0.06);
+    transform: translateY(-2px);
+  }
+  .rec-num {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--green);
+    flex-shrink: 0;
+    width: 40px;
+  }
+  .rec-card h3 {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 8px;
+  }
+  .rec-card p {
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--text-light);
+  }
+  .rec-card.rec-full { grid-column: 1 / -1; }
+
+  .rec-conclusion {
+    margin-top: 40px;
+    padding: 32px 40px;
+    background: var(--green-bg);
+    border-radius: 16px;
+    border-left: 4px solid var(--green);
+  }
+  .rec-conclusion p {
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--text);
+  }
+
+  /* ─── TEAM ─── */
+  #team { background: var(--off-white); }
+  .team-section-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 24px;
+    margin-top: 48px;
+  }
+  .team-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .team-grid-collab {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+  }
+  .team-card {
+    text-align: center;
+    background: var(--white);
+    border-radius: 16px;
+    padding: 36px 20px;
+    border: 1px solid var(--border);
+    transition: all 0.3s;
+  }
+  .team-card:hover {
+    box-shadow: 0 8px 24px rgba(91,45,142,0.08);
+    transform: translateY(-4px);
+  }
+  .team-avatar {
+    width: 140px;
+    height: 140px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--purple-bg), var(--green-bg));
+    margin: 0 auto 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--purple);
+  }
+  .team-photo {
+    width: 140px;
+    height: 140px;
+    border-radius: 12px;
+    object-fit: cover;
+    object-position: center top;
+    margin: 0 auto 16px;
+    display: block;
+    border: 2px solid var(--border);
+  }
+  .team-card h3 {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 4px;
+  }
+  .team-card .role {
+    font-size: 13px;
+    color: var(--text-light);
+  }
+  .team-card-compact {
+    padding: 24px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .team-thanks {
+    margin-top: 40px;
+    padding: 28px 36px;
+    background: var(--white);
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--text-light);
+    font-style: italic;
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--dark);
+    color: rgba(255,255,255,0.7);
+    padding: 60px 32px 40px;
+  }
+  .footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 24px;
+  }
+  .footer-logos {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .footer-logos img { height: 28px; filter: brightness(0) invert(1); opacity: 0.8; }
+  .footer-logos .divider { width: 1px; height: 20px; background: rgba(255,255,255,0.2); }
+  footer p { font-size: 13px; }
+  footer a { color: var(--green-light); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 900px) {
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    .nav-links.open {
+      display: flex;
+      flex-direction: column;
+      position: absolute;
+      top: 72px;
+      left: 0; right: 0;
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      padding: 24px 32px;
+      gap: 20px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+    }
+    .about-grid { grid-template-columns: 1fr; gap: 32px; }
+    .project-content { grid-template-columns: 1fr; }
+    .stats-row, .stats-row-2 { grid-template-columns: 1fr; }
+    .rec-grid { grid-template-columns: 1fr; }
+    .team-grid, .team-grid-collab { grid-template-columns: 1fr 1fr; }
+    .hero-cross { display: none; }
+    .hero-cta { flex-direction: column; }
+    .footer-inner { flex-direction: column; text-align: center; }
+    .qual-callout { padding: 28px 24px; }
+  }
+  @media (max-width: 600px) {
+    .team-grid-collab { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* ─── SCROLL ANIMATION ─── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: all 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <div class="nav-inner">
+    <div class="nav-logos">
+      <img src="anytime-telecare-logo.jpeg" alt="Anytime Telecare" />
+      <div class="divider"></div>
+      <img src="wagner-logo.png" alt="NYU Wagner" />
+    </div>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#hero">Home</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#project">Project</a></li>
+      <li><a href="#findings">Findings</a></li>
+      <li><a href="#recommendations">Recommendations</a></li>
+      <li><a href="#team">Team</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-cross">
+    <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M70 0H130V70H200V130H130V200H70V130H0V70H70V0Z" fill="#5B2D8E"/>
+    </svg>
+  </div>
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span class="dot"></span>
+      NYU Wagner Capstone 2026
+    </div>
+    <h1>Optimizing Care Access: The Impact of <span>After-Hours Nurse Triage</span></h1>
+    <p class="hero-subtitle">A data-driven analysis of Anytime Telecare's impact on care access, utilization, and cost.</p>
+    <div class="hero-statement">
+      Only <strong>7.46%</strong> of triage calls result in emergency department referrals, highlighting strong potential to reduce avoidable ED utilization.
+    </div>
+    <p class="hero-authors">By <strong>Sravya Kunaparaju</strong>, <strong>Anjie Lu</strong>, &amp; <strong>Sarah Graves</strong></p>
+    <div class="hero-cta">
+      <a href="#findings" class="btn btn-primary">
+        View Key Findings
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5-5-5-5"/></svg>
+      </a>
+      <a href="#project" class="btn btn-outline">Project Overview</a>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-inner">
+    <div class="section-label">About</div>
+    <h2 class="section-title reveal">About Anytime Telecare</h2>
+    <p class="section-desc reveal">A nurse-led clinical support service providing after-hours telephone triage for healthcare practices across the country.</p>
+
+    <div class="about-grid">
+      <div class="about-card reveal">
+        <p>Anytime Telecare is a nurse-led clinical support service that provides after-hours telephone triage for healthcare practices. The organization partners with pediatric and primary care providers to ensure patients have access to timely clinical guidance when offices are closed.</p>
+        <br>
+        <p>Using standardized protocols, experienced registered nurses assess patient symptoms, provide care recommendations, and guide patients to the most appropriate level of care. When needed, calls are escalated to on-call providers, and detailed encounter summaries are shared with the patient's primary practice to support continuity of care.</p>
+      </div>
+      <div class="about-right">
+        <div class="about-card reveal">
+          <div class="icon icon-purple"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5B2D8E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.18 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.362 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg></div>
+          <h3>24/7 Clinical Access</h3>
+          <p>Through around-the-clock access to clinical support, Anytime Telecare helps practices extend care beyond regular hours and improve patient access.</p>
+        </div>
+        <div class="about-card reveal">
+          <div class="icon icon-green"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6EC88C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M9 8h1M9 12h1M9 16h1M14 8h1M14 12h1M14 16h1"/><rect x="5" y="3" width="14" height="18" rx="1"/><path d="M10 21v-4h4v4"/></svg></div>
+          <h3>Reducing Unnecessary Utilization</h3>
+          <p>By guiding patients to the right level of care, the service reduces unnecessary emergency department and urgent care utilization.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECT -->
+<section id="project">
+  <div class="section-inner">
+    <div class="section-label">Overview</div>
+    <h2 class="section-title reveal">Project Overview</h2>
+    <p class="section-desc reveal">This project evaluates the impact of after-hours nurse-led telephone triage on healthcare utilization, with a focus on reducing avoidable emergency department and urgent care visits. A significant portion of ED use is driven by low-acuity conditions, particularly during evenings and weekends when access to primary care is limited.</p>
+
+    <div class="project-content">
+      <div class="proj-card reveal">
+        <div class="step-icon icon-purple"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5B2D8E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
+        <h3>Data Analysis</h3>
+        <p>Examination of de-identified triage encounter data to understand call patterns, patient needs, and care outcomes, including disposition categories and escalation rates.</p>
+      </div>
+      <div class="proj-card reveal">
+        <div class="step-icon icon-green"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6EC88C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg></div>
+        <h3>Literature Review</h3>
+        <p>Review of national studies and policy sources (e.g., CMS, AHRQ) to benchmark ED avoidance, cost differences, and the effectiveness of tele-triage models.</p>
+      </div>
+      <div class="proj-card reveal">
+        <div class="step-icon icon-purple"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5B2D8E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 18a2 2 0 002-2V8a2 2 0 00-2-2H7a2 2 0 00-2 2v8a2 2 0 002 2h3l4 4 0-4h3z"/></svg></div>
+        <h3>Qualitative Insights</h3>
+        <p>Interviews with providers and stakeholders to better understand care pathways, patient behavior, and real-world implementation challenges.</p>
+      </div>
+      <div class="proj-card reveal">
+        <div class="step-icon icon-green"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6EC88C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg></div>
+        <h3>Integrated Findings</h3>
+        <p>Together, these methods provide a comprehensive view of how after-hours triage influences patient decision-making, supports continuity of care, and reduces reliance on high-cost emergency services.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINDINGS -->
+<section id="findings">
+  <div class="section-inner">
+    <div class="section-label">Data</div>
+    <h2 class="section-title reveal">Key Findings</h2>
+    <p class="section-desc reveal">Analysis of Anytime Telecare's triage data shows that the majority of patient concerns are low-acuity and can be safely managed outside high-cost care settings. Utilization is heavily concentrated during after-hours periods.</p>
+
+    <div class="stats-row">
+      <div class="stat-card reveal">
+        <div class="stat-number" data-target="7.46" data-decimals="2">7.46<span class="stat-suffix">%</span></div>
+        <div class="stat-label">Of calls result in<br>ED referrals</div>
+      </div>
+      <div class="stat-card reveal">
+        <div class="stat-number" data-target="52.96" data-decimals="2">52.96<span class="stat-suffix">%</span></div>
+        <div class="stat-label">Of calls occur during<br>after-hours (6 PM – 6 AM)</div>
+      </div>
+      <div class="stat-card reveal">
+        <div class="stat-number" data-target="98.4" data-decimals="1">98.4<span class="stat-suffix">%</span></div>
+        <div class="stat-label">Of calls involve<br>pediatric patients</div>
+      </div>
+    </div>
+
+    <div class="stats-row-2">
+      <div class="stat-card reveal">
+        <div class="stat-number" data-target="35.86" data-decimals="2">35.86<span class="stat-suffix">%</span></div>
+        <div class="stat-label">Resolved through<br>home/self-care</div>
+      </div>
+      <div class="stat-card reveal">
+        <div class="stat-number" data-target="17.65" data-decimals="2">17.65<span class="stat-suffix">%</span></div>
+        <div class="stat-label">Directed to next-day<br>primary care follow-up</div>
+      </div>
+      <div class="stat-card reveal" style="display:flex; align-items:center; justify-content:center;">
+        <div>
+          <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:18px; font-weight:700; color:var(--dark); margin-bottom:6px;">Majority Low-Acuity</div>
+          <div class="stat-label">Most cases are manageable<br>outside the ED</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Qualitative Insight -->
+    <div class="qual-callout reveal">
+      <h3>Qualitative Insight</h3>
+      <p>Interviews with providers and practice staff indicate that patients experience minimal wait times and high reassurance from triage support. Providers also reported improved workflow efficiency and reduced after-hours burden, particularly for non-urgent cases.</p>
+    </div>
+
+    <!-- Tableau Charts -->
+    <div class="tableau-grid">
+      <div class="tableau-embed-wrapper reveal">
+        <h3>Care Outcomes Following Triage</h3>
+        <p class="caption">The majority of cases are managed through lower-intensity care pathways, with only 7.46% resulting in emergency department referrals, indicating minimal escalation to high-cost care.</p>
+        <iframe class="tableau-frame" src="https://public.tableau.com/views/Capstone-BarGraph/DispositionCategory?:language=en-US&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link&:showVizHome=no&:embed=true" allowfullscreen></iframe>
+      </div>
+
+      <div class="tableau-embed-wrapper reveal">
+        <h3>When Patients Seek Care</h3>
+        <p class="caption">Over half (52.96%) of triage calls occur during after-hours, demonstrating the critical role of nurse triage in providing access when primary care is unavailable.</p>
+        <iframe class="tableau-frame" src="https://public.tableau.com/views/Capstone-PieChart/TimePeriod?:language=en-US&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link&:showVizHome=no&:embed=true" allowfullscreen></iframe>
+      </div>
+
+      <div class="tableau-embed-wrapper reveal">
+        <h3>Patient Population</h3>
+        <p class="caption">Triage utilization is overwhelmingly pediatric, with 98.4% of calls involving children, particularly among younger age groups, reflecting caregiver reliance on after-hours guidance.</p>
+        <iframe class="tableau-frame" src="https://public.tableau.com/views/Capstone_17779351406700/Age-Disposition?:language=en-US&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link&:showVizHome=no&:embed=true" allowfullscreen></iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RECOMMENDATIONS -->
+<section id="recommendations">
+  <div class="section-inner">
+    <div class="section-label">Strategy</div>
+    <h2 class="section-title reveal">Recommendations</h2>
+    <p class="section-desc reveal">Based on the findings, several strategies can strengthen the value and scalability of Anytime Telecare while enhancing its impact on reducing unnecessary ED utilization.</p>
+
+    <div class="rec-grid">
+      <div class="rec-card reveal">
+        <div class="rec-num">01</div>
+        <div>
+          <h3>Strengthen Payer-Facing Value &amp; ROI Modeling</h3>
+          <p>Develop more refined, payer-specific economic models that incorporate reimbursement rates, net savings, and value-based care metrics to improve credibility and support adoption among risk-bearing organizations.</p>
+        </div>
+      </div>
+      <div class="rec-card reveal">
+        <div class="rec-num">02</div>
+        <div>
+          <h3>Integrate Claims Data to Validate Outcomes</h3>
+          <p>Linking triage encounters with actual utilization data can enable direct measurement of ED and urgent care visits following triage, strengthening evidence of care diversion beyond modeled estimates.</p>
+        </div>
+      </div>
+      <div class="rec-card reveal">
+        <div class="rec-num">03</div>
+        <div>
+          <h3>Focus on High-Impact Populations</h3>
+          <p>Given that the majority of utilization comes from pediatric patients, targeted strategies such as caregiver education and condition-specific pathways can further improve triage effectiveness for common low-acuity conditions.</p>
+        </div>
+      </div>
+      <div class="rec-card reveal">
+        <div class="rec-num">04</div>
+        <div>
+          <h3>Increase Patient Awareness &amp; Utilization</h3>
+          <p>Expanding awareness through patient education and integrating triage access into routine care touchpoints (e.g., patient portals, reminders) can reduce unnecessary ED visits by encouraging patients to seek guidance first.</p>
+        </div>
+      </div>
+      <div class="rec-card reveal">
+        <div class="rec-num">05</div>
+        <div>
+          <h3>Align with Value-Based Care Models</h3>
+          <p>Positioning Anytime Telecare as a tool for improving care coordination, access, and cost efficiency can support adoption among accountable care organizations and managed care plans.</p>
+        </div>
+      </div>
+      <div class="rec-card reveal">
+        <div class="rec-num">06</div>
+        <div>
+          <h3>Quantify Provider Experience Benefits</h3>
+          <p>Measuring reductions in after-hours workload and improvements in provider well-being can strengthen the value proposition beyond financial savings.</p>
+        </div>
+      </div>
+      <div class="rec-card rec-full reveal">
+        <div class="rec-num">07</div>
+        <div>
+          <h3>Invest in Data Infrastructure &amp; Future Research</h3>
+          <p>Enhancing analytics capabilities, integrating with health systems, and conducting prospective studies can improve transparency and provide stronger evidence for long-term impact.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="rec-conclusion reveal">
+      <p>Together, these recommendations position Anytime Telecare as a data-driven, scalable solution capable of improving care access, reducing unnecessary utilization, and supporting value-based healthcare delivery.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TEAM -->
+<section id="team">
+  <div class="section-inner">
+    <div class="section-label">People</div>
+    <h2 class="section-title reveal">Our Team</h2>
+    <p class="section-desc reveal">This project was conducted as part of the NYU Wagner Capstone Program by a team of graduate students specializing in Health Policy and Management.</p>
+
+    <h4 class="team-section-title reveal">Capstone Team</h4>
+    <div class="team-grid">
+      <div class="team-card reveal">
+        <img class="team-photo" src="Sravya.jpeg" alt="Sravya Kunaparaju" />
+        <h3>Sravya Kunaparaju</h3>
+        <p class="role">MPA: HPAM, NYU Wagner</p>
+      </div>
+      <div class="team-card reveal">
+        <img class="team-photo" src="Anjie.jpeg" alt="Anjie Lu" />
+        <h3>Anjie Lu</h3>
+        <p class="role">MPA: HPAM, NYU Wagner</p>
+      </div>
+      <div class="team-card reveal">
+        <img class="team-photo" src="Sarah.jpeg" alt="Sarah Graves" />
+        <h3>Sarah Graves</h3>
+        <p class="role">MPA: HPAM, NYU Wagner</p>
+      </div>
+    </div>
+
+    <h4 class="team-section-title reveal">In Collaboration With Anytime Telecare</h4>
+    <div class="team-grid-collab">
+      <div class="team-card team-card-compact reveal">
+        <h3>Stephanie Rose-Belcher</h3>
+        <p class="role">Chief Executive Officer</p>
+      </div>
+      <div class="team-card team-card-compact reveal">
+        <h3>William Feaster</h3>
+        <p class="role">Chief Medical Advisor</p>
+      </div>
+      <div class="team-card team-card-compact reveal">
+        <h3>Teddy Kelly</h3>
+        <p class="role">Chief Technology Officer</p>
+      </div>
+      <div class="team-card team-card-compact reveal">
+        <h3>Eileen Foley</h3>
+        <p class="role">Director of Client Services</p>
+      </div>
+    </div>
+
+    <div class="team-thanks reveal">
+      We sincerely appreciate their support, insights, and collaboration in making this project possible.
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logos">
+      <img src="wagner-logo.png" alt="NYU Wagner" />
+      <div class="divider"></div>
+      <img src="anytime-telecare-logo.jpeg" alt="Anytime Telecare" />
+    </div>
+    <p>NYU Wagner Capstone 2026 · In Partnership with <a href="https://anytimetelecare.com" target="_blank">Anytime Telecare</a></p>
+  </div>
+</footer>
+
+<script>
+  // Navbar scroll
+  window.addEventListener('scroll', () => {
+    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 40);
+  });
+
+  // Mobile menu
+  document.getElementById('hamburger').addEventListener('click', () => {
+    document.getElementById('navLinks').classList.toggle('open');
+  });
+  document.querySelectorAll('.nav-links a').forEach(a => {
+    a.addEventListener('click', () => document.getElementById('navLinks').classList.remove('open'));
+  });
+
+  // Scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add('visible');
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // Stat counter animation
+  const statObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const el = entry.target;
+        const target = parseFloat(el.getAttribute('data-target'));
+        if (isNaN(target)) return;
+        const decimals = parseInt(el.getAttribute('data-decimals') || '0');
+        let current = 0;
+        const increment = target / 45;
+        const timer = setInterval(() => {
+          current += increment;
+          if (current >= target) {
+            current = target;
+            clearInterval(timer);
+          }
+          el.innerHTML = current.toFixed(current >= target ? decimals : Math.min(decimals, 1)) + '<span class="stat-suffix">%</span>';
+        }, 28);
+        statObserver.unobserve(el);
+      }
+    });
+  }, { threshold: 0.5 });
+  document.querySelectorAll('.stat-number[data-target]').forEach(el => statObserver.observe(el));
+</script>
+
+</body>
+</html>
