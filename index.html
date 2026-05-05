@@ -61,8 +61,11 @@
     display: flex;
     align-items: center;
     gap: 16px;
+    min-width: 0;
+    flex-shrink: 1;
+    overflow: hidden;
   }
-  .nav-logos img { height: 36px; }
+  .nav-logos img { height: 36px; max-width: 100%; object-fit: contain; }
   .nav-logos .divider {
     width: 1px;
     height: 28px;
@@ -516,6 +519,33 @@
     border-radius: 12px;
     background: var(--purple-bg);
   }
+  .tableau-mobile-link {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 14px 24px;
+    background: var(--purple-bg);
+    color: var(--purple);
+    font-weight: 600;
+    font-size: 14px;
+    border-radius: 10px;
+    text-decoration: none;
+    transition: all 0.3s;
+  }
+  .tableau-mobile-link:hover {
+    background: var(--purple);
+    color: var(--white);
+  }
+  .tableau-mobile {
+    display: none;
+  }
+  .tableau-screenshot {
+    width: 100%;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    margin-bottom: 12px;
+  }
 
   /* ─── RECOMMENDATIONS ─── */
   #recommendations { background: var(--white); }
@@ -714,13 +744,17 @@
     .hero-cta { flex-direction: column; align-items: flex-start; }
     .footer-inner { flex-direction: column; text-align: center; }
     .qual-callout { padding: 28px 24px; }
-    .tableau-frame { min-height: 400px; }
+    .tableau-desktop { display: none; }
+    .tableau-mobile { display: block; }
+    .tableau-mobile-link { display: flex; }
   }
 
   /* ─── PHONE ─── */
   @media (max-width: 600px) {
     .nav-inner { padding: 0 16px; }
-    .nav-logos img { height: 28px; }
+    .nav-logos { gap: 10px; }
+    .nav-logos img { height: 24px; }
+    .nav-logos .divider { height: 20px; }
     section { padding: 56px 16px; }
 
     .hero-content { padding: 100px 16px 60px; }
@@ -746,7 +780,9 @@
     .qual-callout p { font-size: 14px; }
 
     .tableau-embed-wrapper { padding: 20px; }
-    .tableau-frame { min-height: 300px; }
+    .tableau-desktop { display: none; }
+    .tableau-mobile { display: block; }
+    .tableau-mobile-link { display: flex; }
 
     .rec-grid { grid-template-columns: 1fr; }
     .rec-card { padding: 24px; }
@@ -945,19 +981,37 @@
       <div class="tableau-embed-wrapper reveal">
         <h3>Care Outcomes Following Triage</h3>
         <p class="caption">The majority of cases are managed through lower-intensity care pathways, with only 7.46% resulting in emergency department referrals, indicating minimal escalation to high-cost care.</p>
-        <iframe class="tableau-frame" src="https://public.tableau.com/views/Capstone-BarGraph/DispositionCategory?:language=en-US&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link&:showVizHome=no&:embed=true" allowfullscreen></iframe>
+        <iframe class="tableau-frame tableau-desktop" src="https://public.tableau.com/views/Capstone-BarGraph/DispositionCategory?:language=en-US&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link&:showVizHome=no&:embed=true" allowfullscreen></iframe>
+        <div class="tableau-mobile">
+          <img src="Disposition-Category.png" alt="Care Outcomes Following Triage - Bar Chart" class="tableau-screenshot" />
+          <a class="tableau-mobile-link" href="https://public.tableau.com/views/Capstone-BarGraph/DispositionCategory?:language=en-US&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link" target="_blank">
+            View Interactive Chart on Tableau
+          </a>
+        </div>
       </div>
 
       <div class="tableau-embed-wrapper reveal">
         <h3>When Patients Seek Care</h3>
         <p class="caption">Over half (52.96%) of triage calls occur during after-hours, demonstrating the critical role of nurse triage in providing access when primary care is unavailable.</p>
-        <iframe class="tableau-frame" src="https://public.tableau.com/views/Capstone-PieChart/TimePeriod?:language=en-US&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link&:showVizHome=no&:embed=true" allowfullscreen></iframe>
+        <iframe class="tableau-frame tableau-desktop" src="https://public.tableau.com/views/Capstone-PieChart/TimePeriod?:language=en-US&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link&:showVizHome=no&:embed=true" allowfullscreen></iframe>
+        <div class="tableau-mobile">
+          <img src="Time-Period.png" alt="When Patients Seek Care - Pie Chart" class="tableau-screenshot" />
+          <a class="tableau-mobile-link" href="https://public.tableau.com/views/Capstone-PieChart/TimePeriod?:language=en-US&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link" target="_blank">
+            View Interactive Chart on Tableau
+          </a>
+        </div>
       </div>
 
       <div class="tableau-embed-wrapper reveal">
         <h3>Patient Population</h3>
         <p class="caption">Triage utilization is overwhelmingly pediatric, with 98.4% of calls involving children, particularly among younger age groups, reflecting caregiver reliance on after-hours guidance.</p>
-        <iframe class="tableau-frame" src="https://public.tableau.com/views/Capstone_17779351406700/Age-Disposition?:language=en-US&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link&:showVizHome=no&:embed=true" allowfullscreen></iframe>
+        <iframe class="tableau-frame tableau-desktop" src="https://public.tableau.com/views/Capstone_17779351406700/Age-Disposition?:language=en-US&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link&:showVizHome=no&:embed=true" allowfullscreen></iframe>
+        <div class="tableau-mobile">
+          <img src="Age-Disposition.png" alt="Patient Population - Area Chart" class="tableau-screenshot" />
+          <a class="tableau-mobile-link" href="https://public.tableau.com/views/Capstone_17779351406700/Age-Disposition?:language=en-US&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link" target="_blank">
+            View Interactive Chart on Tableau
+          </a>
+        </div>
       </div>
     </div>
   </div>
